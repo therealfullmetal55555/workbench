@@ -1,0 +1,107 @@
+# Local development stack.
+#
+#   make up && make migrate && make seed
+#
+# Two Postgres roles are created by the migrations. The app connects as
+# `workbench` (owns nothing, RLS applies); migrations connect as
+# `workbench_admin` (owns everything). See docs/TENANCY.md.
+
+name: workbench
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: wb-postgres
+    environment:
+      POSTGRES_USER: workbench_admin
+      POSTGRES_PASSWORD: workbench_admin
+      POSTGRES_DB: workbench
+      # Needed so the init script can create the second role.
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    ports:
+      # 5433 on the host so this doesn't fight with a Postgres you already run.
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres-init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workbench_admin -d workbench"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    command:
+      # log_statement=all while developing migrations is worth the noise.
+      - postgres
+      - -c
+      - log_min_duration_statement=200
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: wb-redis
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+    restart: unless-stopped
+
+  mailhog:
+    # Catches invitation and password-reset email locally.
+    image: mailhog/mailhog:v1.0.1
+    container_name: wb-mailhog
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # web UI
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: wb-api
+    command: ["uvicorn", "workbench.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./migrations:/app/migrations
+    env_file: [.env]
+    environment:
+      DATABASE_DSN: postgresql+asyncpg://workbench:workbench@postgres:5432/workbench
+      DATABASE_ADMIN_DSN: postgresql+asyncpg://workbench_admin:workbench_admin@postgres:5432/workbench
+      REDIS_DSN: redis://redis:6379/0
+      SMTP_URL: smtp://mailhog:1025
+      OTEL_ENDPOINT: http://otel-collector:4317
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: wb-worker
+    command: ["celery", "-A", "workbench.workers.celery_app", "worker", "-l", "info", "-Q", "default,email,billing"]
+    volumes:
+      - ./src:/app/src
+    env_file: [.env]
+    environment:
+      DATABASE_DSN: postgresql+asyncpg://workbench:workbench@postgres:5432/workbench
+      DATABASE_ADMIN_DSN: postgresql+asyncpg://workbench_admin:workbench_admin@postgres:5432/workbench
+      REDIS_DSN: redis://redis:6379/0
+      SMTP_URL: smtp://mailhog:1025
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:

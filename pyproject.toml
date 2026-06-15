@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "workbench"
+version = "0.1.0"
+description = "Multi-tenant SaaS foundation: orgs, roles, billing, entitlements, audit — with row-level security in Postgres"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "therealfullmetal55555" }]
+keywords = ["saas", "multi-tenant", "fastapi", "postgresql", "row-level-security", "stripe"]
+
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "sqlalchemy[asyncio]>=2.0.35",
+  "asyncpg>=0.30",
+  "alembic>=1.13",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  "email-validator>=2.2",
+  "jinja2>=3.1",
+  "pyjwt>=2.9",
+  "argon2-cffi>=23.1",
+  "redis>=5.1",
+  "httpx>=0.27",
+  "stripe>=11.0",
+  "structlog>=24.4",
+]
+
+[project.optional-dependencies]
+workers = ["celery[redis]>=5.4"]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+  "pytest-cov>=6.0",
+  "ruff>=0.7",
+  "black>=24.10",
+  "mypy>=1.13",
+  "types-redis",
+  "aiosqlite>=0.20",
+]
+
+[project.scripts]
+workbench = "workbench.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/therealfullmetal55555/workbench"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = [
+  "workbench", "workbench.core", "workbench.api", "workbench.tenancy", "workbench.auth",
+  "workbench.billing", "workbench.audit", "workbench.data", "workbench.admin",
+  "workbench.workers", "workbench.email",
+]
+
+[tool.setuptools.package-data]
+"workbench.email" = ["templates/*.html", "templates/*.txt"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "RET", "T20"]
+# B008 is FastAPI's core idiom (`= Depends(...)` in a signature), not a mistake.
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["T20"]
+"scripts/*" = ["T20"]
+# A CLI's entire job is stdout, and its output is the product.
+"src/workbench/cli.py" = ["T20"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[tool.coverage.run]
+source = ["workbench"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError"]
