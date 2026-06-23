@@ -1,0 +1,19 @@
+{% extends "_layout.html" %}
+{% block heading %}Confirm your email address{% endblock %}
+{% block body %}
+  <p style="margin:0 0 16px;">Hi {{ name or "there" }},</p>
+  <p style="margin:0 0 20px;">
+    Confirm <strong>{{ email }}</strong> and your account is ready. The link works for
+    {{ ttl_hours }} hours and can only be used once.
+  </p>
+  <p style="margin:0 0 24px;">
+    <a href="{{ verify_url }}" style="display:inline-block;background:#1c1917;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Confirm email address</a>
+  </p>
+  <p style="margin:0;color:#57534e;font-size:14px;">
+    Or paste this into your browser:<br>
+    <span style="word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;">{{ verify_url }}</span>
+  </p>
+{% endblock %}
+{% block footer %}
+  Confirming is what lets us send you password resets. Until then, we can't.
+{% endblock %}

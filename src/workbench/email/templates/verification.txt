@@ -1,0 +1,13 @@
+Confirm your email address
+
+Hi {{ name or "there" }},
+
+Confirm {{ email }} and your account is ready. The link works for
+{{ ttl_hours }} hours and can only be used once:
+
+    {{ verify_url }}
+
+Confirming is what lets us send you password resets. Until then, we can't.
+
+You are receiving this because someone used this address with {{ product }}.
+If that was not you, nothing has changed and you can ignore this message.

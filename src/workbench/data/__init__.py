@@ -1,0 +1,1 @@
+"""Tenant-owned sample resources."""

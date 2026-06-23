@@ -1,0 +1,13 @@
+{% extends "_layout.html" %}
+{% block heading %}We could not take your payment{% endblock %}
+{% block body %}
+  <p style="margin:0 0 16px;">The {{ amount }} payment for {{ org_name }} did not go through — the card was declined, not charged.</p>
+  <p style="margin:0 0 20px;">Nothing has stopped working. Your {{ plan_name }} plan stays active while we retry, and you keep full access in the meantime.</p>
+  <p style="margin:0 0 24px;">
+    <a href="{{ update_url }}" style="display:inline-block;background:#1c1917;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Update payment details</a>
+  </p>
+  <p style="margin:0;color:#57534e;font-size:14px;">This is attempt {{ attempt }} of {{ max_attempts }}. We will try again on {{ next_attempt_at }}. If it keeps failing, the account becomes read-only on {{ read_only_at }} — you will still be able to export everything.</p>
+{% endblock %}
+{% block footer %}
+  Expired card, a new card, a bank's fraud rule — this is usually a two-minute fix.
+{% endblock %}

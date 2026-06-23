@@ -1,0 +1,16 @@
+{% extends "_layout.html" %}
+{% block heading %}You have used {{ percent }}% of your monthly requests{% endblock %}
+{% block body %}
+  <p style="margin:0 0 16px;">{{ org_name }} has used {{ used }} of {{ limit }} requests on the {{ plan_name }} plan. The counter resets on {{ resets_at }}.</p>
+  {% if will_hard_stop %}
+    <p style="margin:0 0 20px;">On this plan, requests are refused once the limit is reached. If anything of yours calls the API in a loop, it will start getting 402s that day.</p>
+  {% else %}
+    <p style="margin:0 0 20px;">Requests keep working past the limit and the extra is billed at the end of the period. Nothing gets cut off — this is a heads-up before the invoice, not a warning.</p>
+  {% endif %}
+  <p style="margin:0 0 24px;">
+    <a href="{{ billing_url }}" style="display:inline-block;background:#1c1917;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">See usage and plans</a>
+  </p>
+{% endblock %}
+{% block footer %}
+  You are getting this because the usage warning is set at {{ warn_percent }}%.
+{% endblock %}

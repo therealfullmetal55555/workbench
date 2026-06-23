@@ -1,0 +1,15 @@
+We could not take your payment
+
+The {{ amount }} payment for {{ org_name }} did not go through — the card was
+declined, not charged.
+
+Nothing has stopped working. Your {{ plan_name }} plan stays active while we
+retry, and you keep full access in the meantime.
+
+Update payment details:
+
+    {{ update_url }}
+
+This is attempt {{ attempt }} of {{ max_attempts }}. We will try again on
+{{ next_attempt_at }}. If it keeps failing, the account becomes read-only on
+{{ read_only_at }} — you will still be able to export everything.

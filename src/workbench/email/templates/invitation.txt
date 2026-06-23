@@ -1,0 +1,14 @@
+Join {{ org_name }}
+
+{{ inviter_name }} invited you to join {{ org_name }} on {{ product }} as {{ role }}.
+
+{% if note %}{{ note }}
+
+{% endif %}Accept the invitation:
+
+    {{ accept_url }}
+
+This invitation expires on {{ expires_at }}. It only works for {{ email }} —
+forwarding it will not let anyone else in.
+
+If you were not expecting this, ignore it and the invitation expires on its own.

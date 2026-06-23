@@ -1,0 +1,47 @@
+{#
+  The shell every email uses.
+
+  Inline styles, a single column, no images, no web fonts, no tracking pixel.
+  Not minimalism for its own sake: a tracking pixel is a privacy problem you have
+  to disclose, an image is blocked by default in most corporate clients, and a
+  web font doesn't load — so the message that looks lovely in the preview renders
+  as Times New Roman with a broken box in the inbox that matters.
+#}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ product }}{% endblock %}</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f5f5f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1c1917;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f4;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid #e7e5e4;border-radius:10px;">
+            <tr>
+              <td style="padding:28px 32px 8px;">
+                <div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#78716c;">{{ product }}</div>
+                <h1 style="margin:8px 0 0;font-size:20px;line-height:1.3;">{% block heading %}{% endblock %}</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:12px 32px 4px;font-size:15px;line-height:1.6;">
+                {% block body %}{% endblock %}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 32px 28px;font-size:13px;line-height:1.6;color:#78716c;border-top:1px solid #e7e5e4;">
+                {% block footer %}{% endblock %}
+              </td>
+            </tr>
+          </table>
+          <div style="max-width:520px;padding:16px 8px;font-size:12px;color:#a8a29e;text-align:left;">
+            You are receiving this because someone used this address with {{ product }}.
+            If that was not you, nothing has changed and you can ignore this message.
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
