@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0A0A0A; }
+      .grid-line { stroke: #181818; stroke-width: 1; }
+      .box { fill: #111111; stroke: #262626; stroke-width: 1.5; rx: 4px; }
+      .box-active { fill: #141414; stroke: #00FF66; stroke-width: 1.5; rx: 4px; }
+      .box-security { fill: #1A1414; stroke: #FF3366; stroke-width: 1.5; rx: 4px; }
+      .text-title { font-family: 'SF Mono', 'Courier New', monospace; font-size: 13px; fill: #FFFFFF; font-weight: bold; letter-spacing: 1px; }
+      .text-sub { font-family: 'SF Mono', 'Courier New', monospace; font-size: 11px; fill: #888888; }
+      .text-accent { font-family: 'SF Mono', 'Courier New', monospace; font-size: 11px; fill: #00FF66; }
+      .text-alert { font-family: 'SF Mono', 'Courier New', monospace; font-size: 11px; fill: #FF3366; }
+      .line { stroke: #333333; stroke-width: 1.5; stroke-dasharray: 4,4; }
+      .line-solid { stroke: #00FF66; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="480" class="bg" />
+  
+  <!-- Grid Lines -->
+  <line x1="0" y1="80" x2="1000" y2="80" class="grid-line" />
+  <line x1="0" y1="400" x2="1000" y2="400" class="grid-line" />
+  <line x1="200" y1="0" x2="200" y2="480" class="grid-line" />
+  <line x1="800" y1="0" x2="800" y2="480" class="grid-line" />
+
+  <!-- Header -->
+  <text x="40" y="50" class="text-title">// SYSTEM_ARCHITECTURE :: WORKBENCH_SAAS_CORE</text>
+  <text x="730" y="50" class="text-accent">[STATUS: PRODUCTION_RLS]</text>
+
+  <!-- INGRESS & AUTH -->
+  <rect x="40" y="150" width="180" height="180" class="box" />
+  <text x="55" y="180" class="text-title">FASTAPI INGRESS</text>
+  <text x="55" y="205" class="text-sub">› Tenant Context Dep</text>
+  <text x="55" y="225" class="text-sub">› JWT / API Key Auth</text>
+  <text x="55" y="245" class="text-sub">› RBAC Matrix Check</text>
+  <text x="55" y="265" class="text-sub">› Token Bucket Limiter</text>
+  <text x="55" y="285" class="text-accent">› Audit Interceptor</text>
+
+  <!-- BRIDGE -->
+  <line x1="220" y1="240" x2="270" y2="240" class="line-solid" />
+
+  <!-- CORE & BILLING -->
+  <rect x="270" y="130" width="230" height="220" class="box-active" />
+  <text x="290" y="160" class="text-title">SERVICES &amp; STATE</text>
+  <text x="290" y="185" class="text-accent">› Stripe Webhook FSM</text>
+  <text x="290" y="210" class="text-sub">› Idempotent Processing</text>
+  <text x="290" y="235" class="text-sub">› Entitlements Engine</text>
+  <text x="290" y="260" class="text-sub">› Celery Async Workers</text>
+  <text x="290" y="285" class="text-sub">› Jinja2 Email Sender</text>
+  <text x="290" y="310" class="text-accent">› Zero Data Leaks</text>
+
+  <!-- DISPATCH LINES -->
+  <line x1="500" y1="200" x2="560" y2="150" class="line-solid" />
+  <line x1="500" y1="280" x2="560" y2="330" class="line" />
+
+  <!-- POSTGRES RLS ENGINE -->
+  <rect x="560" y="100" width="220" height="150" class="box-security" />
+  <text x="575" y="130" class="text-alert">POSTGRESQL RLS</text>
+  <text x="575" y="155" class="text-sub">› SET app.current_org</text>
+  <text x="575" y="175" class="text-alert">› Hardware Isolation</text>
+  <text x="575" y="195" class="text-sub">› FORCE ROW LEVEL SEC</text>
+  <text x="575" y="215" class="text-sub">› Auto-Filtered Queries</text>
+  <text x="575" y="235" class="text-accent">› Zero App-Level Leaks</text>
+
+  <!-- BILLING & WORKERS -->
+  <rect x="560" y="280" width="220" height="100" class="box" />
+  <text x="575" y="310" class="text-title">STRIPE &amp; CELERY</text>
+  <text x="575" y="335" class="text-sub">› Subscription Lifecycle</text>
+  <text x="575" y="355" class="text-accent">› Quota Warning / Dunning</text>
+
+  <!-- AUDIT TRAIL -->
+  <line x1="780" y1="240" x2="830" y2="240" class="line-solid" />
+
+  <rect x="830" y="160" width="130" height="160" class="box" />
+  <text x="845" y="190" class="text-title">AUDIT LOG</text>
+  <text x="845" y="215" class="text-sub">› Actor IP / Agent</text>
+  <text x="845" y="235" class="text-sub">› Immutable Trail</text>
+  <text x="845" y="255" class="text-sub">› JSONB Diffs</text>
+  <text x="845" y="275" class="text-accent">› SOC-2 Ready</text>
+
+  <!-- FOOTER -->
+  <text x="40" y="435" class="text-sub">FASTAPI + POSTGRESQL RLS  |  IDEMPOTENT STRIPE STATE MACHINE  |  SOC-2 COMPLIANT AUDIT</text>
+</svg>
